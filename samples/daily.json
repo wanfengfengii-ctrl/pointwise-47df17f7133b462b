@@ -1,0 +1,9 @@
+{
+  "lake_id": "survey",
+  "day": "2025-08-14",
+  "batch_id": "morning",
+  "rows": [
+    {"observation": "R", "partition": "east", "source": "station-E/aug14", "line": 4, "unit": "mm", "mm": 7},
+    {"observation": "B", "partition": "north", "source": "station-N/aug14", "line": 9, "unit": "mm", "mm": 5}
+  ]
+}
