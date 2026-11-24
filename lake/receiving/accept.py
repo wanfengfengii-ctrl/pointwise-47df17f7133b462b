@@ -2,7 +2,17 @@ from lake.dispatch.wire import encode_package
 from lake.receiving.inventory import find_package, record_package
 from lake.receiving.package_checks import check_package
 from lake.receiving.receipt import PackageConflict
+from lake.receiving.rollover import (
+    initialize_rollover, receive_rollover, retire_rollover,
+)
 from lake.receiving.store import receiving_transaction
+
+__all__ = [
+    'receive',
+    'initialize_rollover',
+    'receive_rollover',
+    'retire_rollover',
+]
 
 
 def receive(db, payload):

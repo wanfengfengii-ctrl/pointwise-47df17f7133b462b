@@ -20,6 +20,12 @@ class PendingMaterials:
     status: ClassVar[str] = 'pending'
 
 
+@dataclass(frozen=True)
+class RetiredMaterials:
+    requested_receipt: OfficialReceipt
+    status: ClassVar[str] = 'retired'
+
+
 def select_visible_materials(request, evidence):
     candidates = defaultdict(set)
     for manifest in evidence.manifests:

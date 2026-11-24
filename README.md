@@ -40,3 +40,13 @@ python3 -B demo.py
 镜像从本地证据中选择达到回执下界的最早完整修订，并随核账结果给出请求回执和交账回执。合法形态的回执在证据不足时得到待件结果。待件仅含请求身份和范围。`samples/daily.json` 与 `samples/transfer.json` 的业务对照为东区 R 由 7 mm 转为西区 11 mm，西区先到时双区待件，北区仍报 5 mm，补齐后双区报 11 mm。
 
 非法日批抛出 `BatchRejected`，同号异参抛出其子类 `BatchConflict`。未知收件抛出 `ReceiptNotFound`。非法更正、未知修订、无效发行回执分别抛出 `CorrectionRejected`、`RevisionNotFound`、`PublicationRejected`。坏件抛出 `PackageRejected`，身份或投影冲突抛出其子类 `PackageConflict`。非法镜像请求抛出 `InvalidMirrorRequest`。SQLite 写入故障回滚当前办理并传播原异常。
+
+## 冷镜像换页的公开面
+
+`ROLLOVER.md` 定义冷镜像换页（`publish_rollover`、`initialize_rollover`、`receive_rollover`、`read_rollover`、`retire_rollover`）。实现位于 `lake/dispatch/rollover_wire.py` 与 `lake/receiving/rollover.py`，目录表随 `open_mirror` 建好。冷镜像的营业正文只存在固定槽中：目录保存身份、投影摘要与办理元数据，槽内保存 `OfficialRow` 正文。两组样例在 `samples/rollover.json`。
+
+- 换页件冻结两份直接父子正式回执、旧分区原序和旧/新投影摘要，只携带新版替换行正文。
+- 建档按旧分区件原序占用编号 0..main_count-1 的主槽；实收先把旧目标行备份进周转槽，再改写主槽，最后提交目录。
+- 退旧先在目录记下 retired，再清空周转槽；仅当新版完全由主槽兑现且周转槽实空才返回成功。首次报 retired 后旧版永久退领，重开用原号续办或复领。
+- `python3 -B verify_rollover.py` 覆盖两组样例与中断矩阵，并已并入 `check_project.py`（`ROLLOVER_VERIFY` 行）。`demo.py` 演示断源双领与退旧中断后续办。
+

@@ -27,10 +27,17 @@ def open_mirror(path):
     db = open_database(path)
     try:
         initialize_mirror(db)
+        _ensure_rollover_directory(db)
     except BaseException:
         db.close()
         raise
     return db
+
+
+def _ensure_rollover_directory(db):
+    from lake.receiving.rollover import create_rollover_directory
+    with atomic(db):
+        create_rollover_directory(db)
 
 
 def receiving_transaction(db):

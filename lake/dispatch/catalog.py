@@ -29,6 +29,30 @@ def initialize_catalog(db):
             payload BLOB NOT NULL,
             PRIMARY KEY (release_id, partition)
         )''')
+        db.execute('''CREATE TABLE IF NOT EXISTS rollover_catalog (
+            lake_id TEXT NOT NULL,
+            day TEXT NOT NULL,
+            partition TEXT NOT NULL,
+            old_revision INTEGER NOT NULL,
+            new_revision INTEGER NOT NULL,
+            payload BLOB NOT NULL,
+            PRIMARY KEY (lake_id, day, partition, old_revision, new_revision)
+        )''')
+
+
+def find_rollover_release(db, lake_id, day, partition, old_revision, new_revision):
+    record = db.execute('''SELECT payload FROM rollover_catalog
+        WHERE lake_id = ? AND day = ? AND partition = ?
+          AND old_revision = ? AND new_revision = ?''',
+                        (lake_id, day, partition, old_revision, new_revision)).fetchone()
+    return None if record is None else record[0]
+
+
+def save_rollover_release(db, lake_id, day, partition, old_revision, new_revision, payload):
+    db.execute('''INSERT INTO rollover_catalog
+        (lake_id, day, partition, old_revision, new_revision, payload)
+        VALUES (?, ?, ?, ?, ?, ?)''',
+               (lake_id, day, partition, old_revision, new_revision, payload))
 
 
 def find_release(db, receipt):

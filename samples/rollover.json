@@ -1,0 +1,32 @@
+[
+  {
+    "case": "same-value-neighbor",
+    "lake_id": "survey",
+    "day": "2025-08-14",
+    "partition": "east",
+    "batch_id": "roll",
+    "rows": [
+      {"observation": "R", "partition": "east", "source": "gage-A", "line": 4, "unit": "mm", "mm": 7},
+      {"observation": "S", "partition": "east", "source": "gage-B", "line": 9, "unit": "mm", "mm": 7},
+      {"observation": "T", "partition": "east", "source": "gage-C", "line": 12, "unit": "mm", "mm": null}
+    ],
+    "change": {"correction_id": "remeasure-R", "observation": "R", "mm": 11},
+    "old": {"observations": ["R", "S", "T"], "positions": [1, 2, 3], "mm": [7, 7, null], "total_mm": 14, "missing_count": 1},
+    "new": {"observations": ["R", "S", "T"], "positions": [1, 2, 3], "mm": [11, 7, null], "total_mm": 18, "missing_count": 1}
+  },
+  {
+    "case": "missing-to-zero",
+    "lake_id": "survey",
+    "day": "2025-08-14",
+    "partition": "east",
+    "batch_id": "zero",
+    "rows": [
+      {"observation": "N", "partition": "north", "source": "gage-N", "line": 2, "unit": "mm", "mm": 5},
+      {"observation": "T", "partition": "east", "source": "gage-C", "line": 12, "unit": "mm", "mm": null},
+      {"observation": "S", "partition": "east", "source": "gage-B", "line": 9, "unit": "mm", "mm": 7}
+    ],
+    "change": {"correction_id": "remeasure-T", "observation": "T", "mm": 0},
+    "old": {"observations": ["T", "S"], "positions": [2, 3], "mm": [null, 7], "total_mm": 7, "missing_count": 1},
+    "new": {"observations": ["T", "S"], "positions": [2, 3], "mm": [0, 7], "total_mm": 7, "missing_count": 0}
+  }
+]
